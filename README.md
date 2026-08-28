@@ -11,9 +11,16 @@ Ask a chess question, get an answer grounded in real book passages and engine an
 - Go — agent runtime, tools, orchestration
 - Wails v2 — desktop app
 - React + TypeScript — UI
-- PostgreSQL + pgvector — persistence + semantic search
-- Redis — optional
+- SQLite — local persistence
+- ChromaMem — vector search + memory
 - Stockfish — chess analysis
+
+## Key features
+
+- **Adaptive responses** — agent adapts to user's playing strength, opening repertoire, and skill level via user profile
+- **Auto-learning** — builds episodic memory from conversations and game reviews, extracts patterns and recurring mistakes
+- **Skill accumulation** — discovers and stores chess skills progressively as the user interacts
+- **Tool-grounded reasoning** — answers backed by book passages and engine analysis, not just pretrained knowledge
 
 ## Project structure
 
@@ -27,8 +34,8 @@ internal/
     books/              book ingestion + lookup
     games/              PGN/game analysis
     memory/             conversation + user memory
-  retrieval/            embedding + pgvector search
-  storage/              PostgreSQL access
+  retrieval/            embedding + ChromaMem search
+  storage/              SQLite persistence
 ```
 
 ## Getting started
@@ -38,7 +45,6 @@ internal/
 ### Prerequisites
 
 - Go 1.26+
-- PostgreSQL + pgvector extension
 - Stockfish (for engine analysis)
 - Node.js (for frontend)
 
