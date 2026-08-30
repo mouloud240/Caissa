@@ -36,11 +36,11 @@ export default function SettingsScreen() {
     }
   }
 
-  async function handleResetPersona() {
-    const defaultPersona = `# Caissa Identity Core
+  function handleResetPersona() {
+    setPersona(`# Caissa Identity Core
 
 NAME: Caissa
-VOICE: Encouraging, tactical, witty
+VOICE: Analytical, calm, precise
 ROLE: AI Chess Second & Analyst
 
 ## Behavioral Directives
@@ -48,8 +48,7 @@ ROLE: AI Chess Second & Analyst
 - Focus on psychological aspects of the user's game
 - If a move is a 'blunder', call it out but explain why
 - Reference classical games when relevant
-`
-    setPersona(defaultPersona)
+`)
   }
 
   async function handleToggleSetting(key: keyof Settings) {
@@ -62,60 +61,76 @@ ROLE: AI Chess Second & Analyst
   return (
     <div className="flex h-full">
       {/* Tab sidebar */}
-      <aside className="w-60 border-r border-[var(--border-subtle)] bg-[var(--bg-sidebar)] p-2 space-y-1 shrink-0">
+      <nav
+        className="w-[220px] border-r border-[var(--border-subtle)] bg-[var(--bg-sidebar)] p-2 space-y-0.5 shrink-0"
+        aria-label="Settings sections"
+      >
         {TABS.map((t) => {
           const Icon = t.icon
+          const isActive = tab === t.id
           return (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
-                tab === t.id
-                  ? 'bg-[var(--bg-elevated)] text-white'
-                  : 'text-[var(--text-secondary)] hover:text-white'
+              aria-current={isActive ? 'page' : undefined}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] font-medium transition-colors duration-fast ${
+                isActive
+                  ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]'
               }`}
             >
-              <Icon size={16} strokeWidth={1.5} />
+              <Icon size={14} strokeWidth={1.5} aria-hidden="true" />
               <span>{t.label}</span>
             </button>
           )
         })}
-      </aside>
+      </nav>
 
       {/* Content */}
-      <div className="flex-1 p-10 overflow-y-auto custom-scrollbar">
+      <main className="flex-1 p-10 overflow-y-auto custom-scrollbar">
         {tab === 'general' && settings && (
-          <div className="space-y-10 max-w-xl">
-            <h2 className="text-xl font-medium">General Settings</h2>
-            <div className="space-y-1.5">
+          <div className="space-y-8 max-w-lg">
+            <h2 className="text-[18px] font-semibold text-[var(--text-primary)]">
+              General
+            </h2>
+            <div className="space-y-0">
+              {/* Notifications */}
               <div className="flex items-center justify-between py-4 border-b border-[var(--border-subtle)]">
                 <div>
-                  <p className="text-[15px] font-medium">Desktop Notifications</p>
-                  <p className="text-[12px] text-[var(--text-muted)]">
+                  <p className="text-[14px] font-medium text-[var(--text-primary)]">
+                    Desktop Notifications
+                  </p>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
                     Notify when analysis is ready
                   </p>
                 </div>
                 <button
                   onClick={() => handleToggleSetting('notifications')}
-                  className={`w-12 h-6 rounded-full relative transition-colors ${
-                    settings.notifications ? 'bg-[#f59e0b]' : 'bg-neutral-700'
+                  className={`w-[40px] h-[22px] rounded-full relative transition-colors duration-fast ${
+                    settings.notifications ? 'bg-[var(--accent)]' : 'bg-[var(--bg-elevated)]'
                   }`}
+                  role="switch"
+                  aria-checked={settings.notifications}
+                  aria-label="Desktop notifications"
                 >
                   <div
-                    className={`w-5 h-5 bg-white rounded-full absolute top-[3px] transition-all ${
-                      settings.notifications ? 'left-[25px]' : 'left-[3px]'
+                    className={`w-[16px] h-[16px] bg-white rounded-full absolute top-[3px] transition-transform duration-fast ${
+                      settings.notifications ? 'translate-x-[20px]' : 'translate-x-[3px]'
                     }`}
                   />
                 </button>
               </div>
 
+              {/* Model Mode */}
               <div className="flex items-center justify-between py-4 border-b border-[var(--border-subtle)]">
                 <div>
-                  <p className="text-[15px] font-medium">Model Mode</p>
-                  <p className="text-[12px] text-[var(--text-muted)]">
+                  <p className="text-[14px] font-medium text-[var(--text-primary)]">
+                    Model Mode
+                  </p>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
                     {settings.modelMode === 'fast'
                       ? 'Prioritize speed and cost'
-                      : 'Prioritize quality'}
+                      : 'Prioritize analysis depth'}
                   </p>
                 </div>
                 <button
@@ -127,13 +142,14 @@ ROLE: AI Chess Second & Analyst
                     setSettings(updated)
                     await SaveSettings(updated)
                   }}
-                  className={`px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide transition-colors duration-fast ${
                     settings.modelMode === 'fast'
-                      ? 'bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20'
-                      : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20'
+                      ? 'bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent)]/15'
+                      : 'bg-[var(--accent-red-subtle)] text-[var(--accent-red)] border border-[var(--accent-red)]/15'
                   }`}
+                  aria-label={`Model mode: ${settings.modelMode}. Click to switch.`}
                 >
-                  {settings.modelMode === 'fast' ? 'FAST' : 'QUALITY'}
+                  {settings.modelMode === 'fast' ? 'FAST' : 'DEEP'}
                 </button>
               </div>
             </div>
@@ -141,39 +157,43 @@ ROLE: AI Chess Second & Analyst
         )}
 
         {tab === 'persona' && (
-          <div className="space-y-6 h-full flex flex-col max-w-2xl">
+          <div className="space-y-5 h-full flex flex-col max-w-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-medium">soul.md</h2>
+              <h2 className="text-[18px] font-semibold text-[var(--text-primary)]">
+                soul.md
+              </h2>
               <div className="flex gap-2">
                 <button
                   onClick={handleResetPersona}
-                  className="px-3.5 py-1.5 rounded-lg border border-[#333] text-[11px] font-bold text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)]"
+                  className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] text-[10px] font-bold text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-colors duration-fast"
                 >
                   RESET
                 </button>
                 <button
                   onClick={handleSavePersona}
-                  className={`px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors duration-fast ${
                     personaSaved
-                      ? 'bg-[#22c55e] text-white'
-                      : 'bg-[#f59e0b] text-black hover:bg-[#d97706]'
+                      ? 'bg-[var(--success)] text-white'
+                      : 'bg-[var(--accent)] text-black hover:bg-[var(--accent-hover)]'
                   }`}
                 >
                   {personaSaved ? 'SAVED ✓' : 'SAVE'}
                 </button>
               </div>
             </div>
-            <div className="flex-1 border border-[var(--border-subtle)] rounded-xl overflow-hidden flex flex-col">
+            <div className="flex-1 border border-[var(--border-subtle)] rounded-lg overflow-hidden flex flex-col min-h-[300px]">
               <textarea
                 value={persona}
                 onChange={(e) => setPersona(e.target.value)}
-                className="flex-1 p-6 resize-none focus:outline-none bg-[#090909] text-[#d4d4d4] text-[14px] leading-relaxed"
+                className="flex-1 p-5 resize-none focus:outline-none bg-[var(--bg-input)] text-[var(--text-primary)] text-[13px] leading-relaxed placeholder:text-[var(--text-muted)]"
                 style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                aria-label="SOUL.md editor"
+                spellCheck={false}
               />
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 }

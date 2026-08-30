@@ -20,56 +20,71 @@ const sessions = [
 
 export default function Sidebar({ activeScreen, onNavigate }: SidebarProps) {
   return (
-    <aside className="w-72 bg-[#171717] border-r border-[#262626] flex flex-col shrink-0">
-      <nav className="p-2.5 space-y-1">
+    <aside
+      className="w-[260px] bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] flex flex-col shrink-0"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <nav className="p-2 space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon
+          const isActive = activeScreen === item.id
           return (
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[14px] font-medium transition-colors ${
-                activeScreen === item.id
-                  ? 'bg-[#262626] text-white'
-                  : 'text-[#a3a3a3] hover:text-white hover:bg-white/5'
+              aria-current={isActive ? 'page' : undefined}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors duration-fast ${
+                isActive
+                  ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]'
               }`}
             >
-              <Icon size={20} strokeWidth={1.5} />
+              <Icon size={16} strokeWidth={1.5} aria-hidden="true" />
               <span>{item.label}</span>
             </button>
           )
         })}
       </nav>
 
-      <div className="flex-1 overflow-y-auto px-2.5 py-5">
-        <div className="flex items-center justify-between px-3 mb-2.5">
-          <p className="text-[11px] font-bold text-neutral-600 uppercase tracking-widest">
+      <div className="flex-1 overflow-y-auto px-2 py-4 custom-scrollbar">
+        <div className="flex items-center justify-between px-2 mb-2">
+          <h2 className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider">
             Sessions
-          </p>
-          <button className="text-[#a3a3a3] hover:text-white transition-colors">
-            <Plus size={17} strokeWidth={1.5} />
+          </h2>
+          <button
+            className="p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] transition-colors duration-fast"
+            aria-label="New session"
+          >
+            <Plus size={14} strokeWidth={1.5} />
           </button>
         </div>
-        <div className="space-y-0.5">
+        <ul className="space-y-0.5" role="list">
           {sessions.map((s) => (
-            <button
-              key={s.id}
-              className="w-full text-left px-3.5 py-2.5 rounded-xl text-[13px] text-[#a3a3a3] hover:bg-white/5 hover:text-white transition-colors truncate"
-            >
-              {s.title}
-            </button>
+            <li key={s.id}>
+              <button
+                className="w-full text-left px-2.5 py-1.5 rounded-lg text-[12px] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-colors duration-fast truncate"
+              >
+                {s.title}
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
-      <div className="p-3.5 border-t border-[#262626]">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#f59e0b]/10 flex items-center justify-center text-[13px] font-bold text-[#f59e0b]">
+      <div className="p-3 border-t border-[var(--border-subtle)]">
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-8 h-8 rounded-lg bg-[var(--accent-subtle)] flex items-center justify-center text-[11px] font-bold text-[var(--accent)]"
+            aria-hidden="true"
+          >
             M
           </div>
-          <div>
-            <p className="text-[13px] font-medium text-white leading-tight">Magnus_Fan</p>
-            <p className="text-[11px] text-[#a3a3a3]">2140 Blitz</p>
+          <div className="min-w-0">
+            <p className="text-[12px] font-medium text-[var(--text-primary)] truncate">
+              Magnus_Fan
+            </p>
+            <p className="text-[10px] text-[var(--text-muted)]">2140 Rapid</p>
           </div>
         </div>
       </div>
