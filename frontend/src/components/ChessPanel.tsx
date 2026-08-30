@@ -16,14 +16,11 @@ const STARTING_POS = [
 
 export default function ChessPanel() {
   return (
-    <div className="w-80 flex-col bg-[#090909] border-l border-[#262626] overflow-y-auto custom-scrollbar hidden lg:flex">
-      <div className="p-6 space-y-8">
+    <div className="w-64 flex-col bg-[#0a0a0a] border-l border-[var(--border-subtle)] overflow-y-auto custom-scrollbar hidden lg:flex">
+      <div className="p-4 space-y-5">
         {/* Board */}
-        <div className="space-y-3">
-          <div
-            id="chess-board"
-            className="grid grid-cols-8 rounded overflow-hidden border border-[#333333]"
-          >
+        <div className="space-y-2">
+          <div className="grid grid-cols-8 rounded-lg overflow-hidden border border-[var(--border-subtle)]">
             {STARTING_POS.map((row, r) =>
               row.map((piece, c) => {
                 const isLight = (r + c) % 2 === 0
@@ -36,7 +33,7 @@ export default function ChessPanel() {
                   >
                     {piece && (
                       <span
-                        className={`text-xl ${
+                        className={`text-lg ${
                           piece === piece.toUpperCase() ? 'text-white' : 'text-[#1a1a1a]'
                         }`}
                       >
@@ -48,22 +45,22 @@ export default function ChessPanel() {
               })
             )}
           </div>
-          <div className="flex items-center justify-between text-[10px] font-medium text-[#a3a3a3] uppercase tracking-tighter">
+          <div className="flex items-center justify-between text-[9px] font-medium text-[var(--text-muted)] uppercase tracking-tighter">
             <span>Stockfish 16.1</span>
-            <span>+0.42</span>
+            <span className="text-[#22c55e]">+0.42</span>
           </div>
         </div>
 
         {/* Session context */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">
+        <div className="space-y-3">
+          <h3 className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest">
             Session Context
           </h3>
-          <div className="p-4 rounded border border-[#262626] bg-[#111111]">
-            <p className="text-[11px] font-bold text-neutral-500 uppercase mb-2">
+          <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase mb-1.5">
               Learned Patterns
             </p>
-            <ul className="text-xs text-neutral-400 space-y-1.5">
+            <ul className="text-[11px] text-[var(--text-secondary)] space-y-1">
               <li>• Dislikes closed structures</li>
               <li>• Weak against London System</li>
               <li>• Strong tactical vision (+2300)</li>

@@ -80,23 +80,25 @@ export default function ChatScreen() {
   return (
     <div className="flex h-full">
       {/* Chat column */}
-      <div className="flex-1 flex flex-col h-full border-r border-[#262626]">
+      <div className="flex-1 flex flex-col h-full border-r border-[var(--border-subtle)]">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-3xl mx-auto space-y-10">
+        <div className="flex-1 overflow-y-auto px-6 py-5 custom-scrollbar">
+          <div className="max-w-2xl mx-auto space-y-6">
             {messages.map((msg) => (
-              <div key={msg.id} className="flex gap-6">
-                <div className="w-6 h-6 rounded-sm bg-neutral-800 flex items-center justify-center shrink-0 mt-1">
-                  <span className="text-[10px] text-neutral-400">
+              <div key={msg.id} className="flex gap-4">
+                <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
+                  msg.role === 'agent' ? 'bg-[#f59e0b]/10' : 'bg-[var(--bg-elevated)]'
+                }`}>
+                  <span className={`text-[9px] ${msg.role === 'agent' ? 'text-[#f59e0b]' : 'text-[var(--text-muted)]'}`}>
                     {msg.role === 'agent' ? '♞' : '♟'}
                   </span>
                 </div>
-                <div className="flex-1 space-y-4">
-                  <p className="text-neutral-300 leading-relaxed text-sm">
+                <div className="flex-1 space-y-2.5">
+                  <p className="text-[var(--text-primary)] leading-relaxed text-[13px]">
                     {msg.content}
                   </p>
                   {msg.toolCalls && msg.toolCalls.length > 0 && (
-                    <div className="flex flex-col border border-[#262626] rounded overflow-hidden">
+                    <div className="flex flex-col border border-[var(--border-subtle)] rounded-lg overflow-hidden">
                       {msg.toolCalls.map((tc, i) => (
                         <ToolChip key={i} tool={tc.tool} detail={tc.detail} />
                       ))}
@@ -106,12 +108,12 @@ export default function ChatScreen() {
               </div>
             ))}
             {loading && (
-              <div className="flex gap-6">
-                <div className="w-6 h-6 rounded-sm bg-neutral-800 flex items-center justify-center shrink-0 mt-1">
-                  <span className="text-[10px] text-neutral-400">♞</span>
+              <div className="flex gap-4">
+                <div className="w-5 h-5 rounded-md bg-[#f59e0b]/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[9px] text-[#f59e0b]">♞</span>
                 </div>
                 <div className="flex-1">
-                  <p className="text-neutral-500 text-sm animate-pulse">Thinking...</p>
+                  <p className="text-[var(--text-muted)] text-[13px] animate-pulse">Thinking...</p>
                 </div>
               </div>
             )}
@@ -120,21 +122,21 @@ export default function ChatScreen() {
         </div>
 
         {/* Composer */}
-        <div className="p-8">
-          <div className="max-w-3xl mx-auto relative">
-            <div className="flex items-center gap-3 bg-[#171717] border border-[#262626] rounded-lg p-1 px-3 focus-within:border-neutral-500 transition-colors">
+        <div className="px-6 pb-5">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl px-3 focus-within:border-[var(--text-muted)] transition-colors">
               <textarea
                 rows={1}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent border-none py-3 text-sm focus:outline-none placeholder:text-neutral-600 resize-none"
+                className="flex-1 bg-transparent border-none py-2.5 text-[13px] focus:outline-none placeholder:text-[var(--text-muted)] resize-none"
                 placeholder="Message Caissa..."
               />
               <button
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
-                className="w-7 h-7 flex items-center justify-center bg-white text-black rounded hover:bg-neutral-200 transition-colors disabled:opacity-30"
+                className="w-6 h-6 flex items-center justify-center bg-[#f59e0b] text-black rounded-lg hover:bg-[#d97706] transition-colors disabled:opacity-30 text-xs font-bold"
               >
                 ↑
               </button>

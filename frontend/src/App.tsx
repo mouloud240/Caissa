@@ -11,7 +11,7 @@ function App() {
   const [screen, setScreen] = useState<Screen>('chat')
 
   return (
-    <div className="flex flex-col h-screen bg-[#0d0d0d] overflow-hidden">
+    <div className="flex flex-col h-screen bg-[var(--bg-base)] overflow-hidden">
       <TitleBar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar activeScreen={screen} onNavigate={setScreen} />

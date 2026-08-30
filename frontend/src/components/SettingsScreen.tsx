@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { GetPersona, SavePersona, GetSettings, SaveSettings } from '../../wailsjs/go/main/App'
+import { General, FileText } from 'lucide-react'
 
 type SettingsTab = 'general' | 'persona'
 
@@ -9,9 +10,9 @@ interface Settings {
   theme: string
 }
 
-const TABS: { id: SettingsTab; label: string }[] = [
-  { id: 'general', label: 'General' },
-  { id: 'persona', label: 'Persona (SOUL.md)' },
+const TABS: { id: SettingsTab; label: string; icon: typeof General }[] = [
+  { id: 'general', label: 'General', icon: General },
+  { id: 'persona', label: 'Persona (SOUL.md)', icon: FileText },
 ]
 
 export default function SettingsScreen() {
@@ -61,53 +62,57 @@ ROLE: AI Chess Second & Analyst
   return (
     <div className="flex h-full">
       {/* Tab sidebar */}
-      <aside className="w-56 border-r border-[#262626] bg-[#111111] p-2 space-y-0.5 shrink-0">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-medium transition-all ${
-              tab === t.id
-                ? 'bg-[#262626] text-white'
-                : 'text-[#a3a3a3] hover:text-white'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <aside className="w-48 border-r border-[var(--border-subtle)] bg-[var(--bg-sidebar)] p-1.5 space-y-px shrink-0">
+        {TABS.map((t) => {
+          const Icon = t.icon
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-all ${
+                tab === t.id
+                  ? 'bg-[var(--bg-elevated)] text-white'
+                  : 'text-[var(--text-secondary)] hover:text-white'
+              }`}
+            >
+              <Icon size={13} strokeWidth={1.5} />
+              <span>{t.label}</span>
+            </button>
+          )
+        })}
       </aside>
 
       {/* Content */}
-      <div className="flex-1 p-12 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
         {tab === 'general' && settings && (
-          <div className="space-y-12">
-            <h2 className="text-xl font-medium">General Settings</h2>
-            <div className="space-y-6">
-              <div className="flex items-center justify-between py-4 border-b border-[#262626]">
+          <div className="space-y-8 max-w-xl">
+            <h2 className="text-lg font-medium">General Settings</h2>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between py-3 border-b border-[var(--border-subtle)]">
                 <div>
-                  <p className="text-sm font-medium">Desktop Notifications</p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-[13px] font-medium">Desktop Notifications</p>
+                  <p className="text-[11px] text-[var(--text-muted)]">
                     Notify when analysis is ready
                   </p>
                 </div>
                 <button
                   onClick={() => handleToggleSetting('notifications')}
-                  className={`w-10 h-5 rounded-full relative transition-colors ${
+                  className={`w-9 h-5 rounded-full relative transition-colors ${
                     settings.notifications ? 'bg-[#f59e0b]' : 'bg-neutral-700'
                   }`}
                 >
                   <div
-                    className={`w-3 h-3 bg-white rounded-full absolute top-1 transition-all ${
-                      settings.notifications ? 'left-6' : 'left-1'
+                    className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-all ${
+                      settings.notifications ? 'left-[18px]' : 'left-[3px]'
                     }`}
                   />
                 </button>
               </div>
 
-              <div className="flex items-center justify-between py-4 border-b border-[#262626]">
+              <div className="flex items-center justify-between py-3 border-b border-[var(--border-subtle)]">
                 <div>
-                  <p className="text-sm font-medium">Model Mode</p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-[13px] font-medium">Model Mode</p>
+                  <p className="text-[11px] text-[var(--text-muted)]">
                     {settings.modelMode === 'fast'
                       ? 'Prioritize speed and cost'
                       : 'Prioritize quality'}
@@ -122,7 +127,11 @@ ROLE: AI Chess Second & Analyst
                     setSettings(updated)
                     await SaveSettings(updated)
                   }}
-                  className="px-3 py-1 rounded border border-[#404040] text-[10px] font-bold text-neutral-400 hover:bg-[#262626]"
+                  className={`px-2.5 py-1 rounded-md text-[9px] font-bold transition-colors ${
+                    settings.modelMode === 'fast'
+                      ? 'bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20'
+                      : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20'
+                  }`}
                 >
                   {settings.modelMode === 'fast' ? 'FAST' : 'QUALITY'}
                 </button>
@@ -132,29 +141,33 @@ ROLE: AI Chess Second & Analyst
         )}
 
         {tab === 'persona' && (
-          <div className="space-y-8 h-full flex flex-col">
+          <div className="space-y-5 h-full flex flex-col max-w-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-medium">soul.md</h2>
-              <div className="flex gap-2">
+              <h2 className="text-lg font-medium">soul.md</h2>
+              <div className="flex gap-1.5">
                 <button
                   onClick={handleResetPersona}
-                  className="px-3 py-1.5 rounded border border-[#404040] text-[10px] font-bold text-neutral-400 hover:bg-[#262626]"
+                  className="px-2.5 py-1 rounded-md border border-[#333] text-[9px] font-bold text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)]"
                 >
                   RESET
                 </button>
                 <button
                   onClick={handleSavePersona}
-                  className="px-3 py-1.5 rounded bg-white text-black text-[10px] font-bold hover:bg-neutral-200"
+                  className={`px-2.5 py-1 rounded-md text-[9px] font-bold transition-colors ${
+                    personaSaved
+                      ? 'bg-[#22c55e] text-white'
+                      : 'bg-[#f59e0b] text-black hover:bg-[#d97706]'
+                  }`}
                 >
                   {personaSaved ? 'SAVED ✓' : 'SAVE'}
                 </button>
               </div>
             </div>
-            <div className="flex-1 border border-[#262626] rounded overflow-hidden flex flex-col">
+            <div className="flex-1 border border-[var(--border-subtle)] rounded-xl overflow-hidden flex flex-col">
               <textarea
                 value={persona}
                 onChange={(e) => setPersona(e.target.value)}
-                className="flex-1 p-8 resize-none focus:outline-none bg-[#090909] text-[#d4d4d4] font-mono text-sm leading-relaxed"
+                className="flex-1 p-5 resize-none focus:outline-none bg-[#090909] text-[#d4d4d4] text-[13px] leading-relaxed"
                 style={{ fontFamily: "'JetBrains Mono', monospace" }}
               />
             </div>
