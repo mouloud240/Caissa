@@ -82,23 +82,23 @@ export default function ChatScreen() {
       {/* Chat column */}
       <div className="flex-1 flex flex-col h-full border-r border-[var(--border-subtle)]">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 custom-scrollbar">
-          <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex-1 overflow-y-auto px-10 py-8 custom-scrollbar">
+          <div className="max-w-4xl mx-auto space-y-10">
             {messages.map((msg) => (
-              <div key={msg.id} className="flex gap-4">
-                <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
+              <div key={msg.id} className="flex gap-6">
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-1 ${
                   msg.role === 'agent' ? 'bg-[#f59e0b]/10' : 'bg-[var(--bg-elevated)]'
                 }`}>
-                  <span className={`text-[9px] ${msg.role === 'agent' ? 'text-[#f59e0b]' : 'text-[var(--text-muted)]'}`}>
+                  <span className={`text-[13px] ${msg.role === 'agent' ? 'text-[#f59e0b]' : 'text-[var(--text-muted)]'}`}>
                     {msg.role === 'agent' ? '♞' : '♟'}
                   </span>
                 </div>
-                <div className="flex-1 space-y-2.5">
-                  <p className="text-[var(--text-primary)] leading-relaxed text-[13px]">
+                <div className="flex-1 space-y-4">
+                  <p className="text-[var(--text-primary)] leading-relaxed text-[16px]">
                     {msg.content}
                   </p>
                   {msg.toolCalls && msg.toolCalls.length > 0 && (
-                    <div className="flex flex-col border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+                    <div className="flex flex-col border border-[var(--border-subtle)] rounded-xl overflow-hidden">
                       {msg.toolCalls.map((tc, i) => (
                         <ToolChip key={i} tool={tc.tool} detail={tc.detail} />
                       ))}
@@ -108,12 +108,12 @@ export default function ChatScreen() {
               </div>
             ))}
             {loading && (
-              <div className="flex gap-4">
-                <div className="w-5 h-5 rounded-md bg-[#f59e0b]/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-[9px] text-[#f59e0b]">♞</span>
+              <div className="flex gap-6">
+                <div className="w-8 h-8 rounded-xl bg-[#f59e0b]/10 flex items-center justify-center shrink-0 mt-1">
+                  <span className="text-[13px] text-[#f59e0b]">♞</span>
                 </div>
                 <div className="flex-1">
-                  <p className="text-[var(--text-muted)] text-[13px] animate-pulse">Thinking...</p>
+                  <p className="text-[var(--text-muted)] text-[16px] animate-pulse">Thinking...</p>
                 </div>
               </div>
             )}
@@ -122,21 +122,21 @@ export default function ChatScreen() {
         </div>
 
         {/* Composer */}
-        <div className="px-6 pb-5">
-          <div className="max-w-2xl mx-auto">
-            <div className="flex items-center gap-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl px-3 focus-within:border-[var(--text-muted)] transition-colors">
+        <div className="px-10 pb-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-3.5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl px-5 focus-within:border-[var(--text-muted)] transition-colors">
               <textarea
                 rows={1}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent border-none py-2.5 text-[13px] focus:outline-none placeholder:text-[var(--text-muted)] resize-none"
+                className="flex-1 bg-transparent border-none py-4 text-[15px] focus:outline-none placeholder:text-[var(--text-muted)] resize-none"
                 placeholder="Message Caissa..."
               />
               <button
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
-                className="w-6 h-6 flex items-center justify-center bg-[#f59e0b] text-black rounded-lg hover:bg-[#d97706] transition-colors disabled:opacity-30 text-xs font-bold"
+                className="w-10 h-10 flex items-center justify-center bg-[#f59e0b] text-black rounded-xl hover:bg-[#d97706] transition-colors disabled:opacity-30 text-base font-bold"
               >
                 ↑
               </button>
