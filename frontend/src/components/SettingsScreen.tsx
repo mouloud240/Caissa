@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { GetPersona, SavePersona, GetSettings, SaveSettings } from '../../wailsjs/go/main/App'
-import { General, FileText } from 'lucide-react'
+import { Settings, FileText } from 'lucide-react'
 
 type SettingsTab = 'general' | 'persona'
 
@@ -10,8 +10,8 @@ interface Settings {
   theme: string
 }
 
-const TABS: { id: SettingsTab; label: string; icon: typeof General }[] = [
-  { id: 'general', label: 'General', icon: General },
+const TABS: { id: SettingsTab; label: string; icon: typeof Settings }[] = [
+  { id: 'general', label: 'General', icon: Settings },
   { id: 'persona', label: 'Persona (SOUL.md)', icon: FileText },
 ]
 

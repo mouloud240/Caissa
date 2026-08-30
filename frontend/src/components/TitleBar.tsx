@@ -1,4 +1,4 @@
-import { Knight } from 'lucide-react'
+import { ChessKnight } from 'lucide-react'
 
 export default function TitleBar() {
   return (
@@ -10,7 +10,7 @@ export default function TitleBar() {
           <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
         </div>
         <div className="flex items-center gap-1.5">
-          <Knight size={11} strokeWidth={1.5} className="text-[#f59e0b]" />
+          <ChessKnight size={11} strokeWidth={1.5} className="text-[#f59e0b]" />
           <span className="text-[10px] font-medium tracking-tight text-[#a3a3a3]">
             Caissa
           </span>
