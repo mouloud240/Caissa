@@ -1,28 +1,27 @@
-import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
-import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
+import { useState } from 'react'
+import TitleBar from './components/TitleBar'
+import Sidebar from './components/Sidebar'
+import ChatScreen from './components/ChatScreen'
+import SettingsScreen from './components/SettingsScreen'
+import './App.css'
+
+type Screen = 'chat' | 'settings'
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
+  const [screen, setScreen] = useState<Screen>('chat')
 
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
-
-    return (
-        <div id="App">
-            <img src={logo} id="logo" alt="logo"/>
-            <div id="result" className="result">{resultText}</div>
-            <div id="input" className="input-box">
-                <input id="name" className="input" onChange={updateName} autoComplete="off" name="input" type="text"/>
-                <button className="btn" onClick={greet}>Greet</button>
-            </div>
-        </div>
-    )
+  return (
+    <div className="flex flex-col h-screen bg-[#0d0d0d] overflow-hidden">
+      <TitleBar />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar activeScreen={screen} onNavigate={setScreen} />
+        <main className="flex-1 overflow-hidden">
+          {screen === 'chat' && <ChatScreen />}
+          {screen === 'settings' && <SettingsScreen />}
+        </main>
+      </div>
+    </div>
+  )
 }
 
 export default App
