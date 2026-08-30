@@ -21,7 +21,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	provider := llm.NewOpenRouterProviderWithBaseURL(apiKey, "inclusionai/ling-3.0-flash-fin:free", "https://openrouter.ai/api/v1")
+	provider := llm.NewOpenRouter(apiKey, "inclusionai/ling-3.0-flash-fin:free")
 
 	registry := tools.NewRegistry()
 	registry.RegisterTool("bash", tools.NewBashTool())

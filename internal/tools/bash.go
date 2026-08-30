@@ -8,7 +8,10 @@ import (
 	"regexp"
 )
 
-const dangerousPatterns = "rm -rf|sudo|wget|curl|chmod|dd|mkfs|:(){:|:&};:"
+var (
+	safeRe      = regexp.MustCompile(`^(ls|cat|echo|git|go|cargo|rg|grep|find|wc|head|tail|sort|diff|mkdir|cp|mv|touch|which|file|stat|python3?|node|npm|stockfish)(\s|$)`)
+	dangerousRe = regexp.MustCompile(`rm\s+-[rRfFiI]*\b|sudo|su\b|doas|mkfs|dd\s+if=|chmod|:(){ :|:&\};:`)
+)
 
 type BashTool struct {
 	name string
@@ -54,8 +57,10 @@ func shouldRequestPermission(cmd string) bool {
 	if cmd == "" {
 		return false
 	}
-	matched, _ := regexp.MatchString(dangerousPatterns, cmd)
-	return matched
+	if safeRe.MatchString(cmd) {
+		return false
+	}
+	return true
 }
 
 func (b *BashTool) Execute(ctx context.Context, args map[string]any) (*ToolResult, error) {
@@ -69,8 +74,12 @@ func (b *BashTool) Execute(ctx context.Context, args map[string]any) (*ToolResul
 	}
 
 	if shouldRequestPermission(cmdStr) {
+		reason := "unknown command"
+		if dangerousRe.MatchString(cmdStr) {
+			reason = "dangerous pattern detected"
+		}
 		return &ToolResult{
-			Content: []ToolContent{{Type: "text", Text: fmt.Sprintf("permission required for: %s", cmdStr)}},
+			Content: []ToolContent{{Type: "text", Text: fmt.Sprintf("permission required for: %s (%s)", cmdStr, reason)}},
 			IsError: true,
 		}, nil
 	}

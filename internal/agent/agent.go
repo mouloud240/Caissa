@@ -57,53 +57,49 @@ func (a *Agent) Run(ctx context.Context, userPrompt string) (string, error) {
 		}
 		messages = append(messages, assistantMsg)
 
-		toolResults := make(map[string]*tools.ToolResult)
 		for _, tc := range resp.ToolCalls {
+			var content string
+
 			tool, err := a.registry.GetTool(tc.ToolName)
 			if err != nil {
-				toolResults[tc.ID] = &tools.ToolResult{
-					Content: []tools.ToolContent{{Type: "text", Text: err.Error()}},
-					IsError: true,
+				content = err.Error()
+			} else {
+				var args map[string]any
+				if len(tc.Args) > 0 {
+					if s, ok := tc.Args[0].(string); ok {
+						if err := json.Unmarshal([]byte(s), &args); err != nil {
+							content = err.Error()
+						}
+					}
 				}
-				continue
-			}
 
-			var args map[string]any
-			if len(tc.Args) > 0 {
-if s, ok := tc.Args[0].(string); ok {
-        if err := json.Unmarshal([]byte(s), &args); err != nil {
-            return "", err
-        }
-    }			}
+				if content == "" {
+					if args == nil {
+						args = make(map[string]any)
+					}
 
-			if args == nil {
-				args = make(map[string]any)
-			}
+					result, err := tool.Execute(ctx, args)
+					if err != nil {
+						result = &tools.ToolResult{
+							Content: []tools.ToolContent{{Type: "text", Text: err.Error()}},
+							IsError: true,
+						}
+					}
 
-
-			result, err := tool.Execute(ctx, args)
-			if err != nil {
-				result = &tools.ToolResult{
-					Content: []tools.ToolContent{{Type: "text", Text: err.Error()}},
-					IsError: true,
-				}
-			}
-			toolResults[tc.ID] = result
-
-			var content string
-			for _, c := range result.Content {
-				if c.Type == "text" {
-					content += c.Text
+					for _, c := range result.Content {
+						if c.Type == "text" {
+							content += c.Text
+						}
+					}
 				}
 			}
+
 			messages = append(messages, llm.Message{
 				Role:       "tool",
 				Content:    content,
 				ToolCallID: tc.ID,
 			})
 		}
-
-		_ = toolResults
 	}
 
 	return "", nil
